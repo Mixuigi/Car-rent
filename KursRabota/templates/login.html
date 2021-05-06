@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block title %} Вход {% endblock title %}
+
+
+{% block content %}
+
+    <h1>Log-in</h1>
+    <p>Please, use the following form to log-in:</p>
+    <form action="." method="post">
+        {{ form.as_p }}
+        {% csrf_token %}
+        <button class="btn btn-success" type="submit" value="Log-in">Log-in</button>
+        <h3><a href="/registr/"> зарегистрироваться </a></h3>
+
+    </form>
+    <h3>вы можете <a href="/logout">выйти</a> из аккаунта, но тогда вам не удастся заказать машинку :(
+    </h3>
+
+    <h2>Переход на <a href="/">главную</a></h2>
+{% endblock content %}

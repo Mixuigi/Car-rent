@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% block title %} Личный кабинет {% endblock title %}
+
+{% block content %}
+
+    <h2>
+        {{ request.user }} вы выбрали {{ car.car_brand }} {{ car.car_model }}, её уникальный номер {{ car.number_auto }}, авто
+        имеет {{ car.car_class }} класс,
+        коробка передач - {{ car.gear_box }}
+    </h2>
+
+    <h3>
+        <form method="post">
+            {% csrf_token %}
+            {{ form_rent.as_p }}
+        <button class="btn btn-success" type="submit">Арендовать авто!</button>
+        </form>
+            текущий {{ passport}}<br>
+            текущий номер авто {{ car }}<br>
+
+        Арендованные:
+
+            {% for rent in rents %}
+             авто - {{ rent.car_number }}<br>
+            {% endfor %}
+
+
+    </h3>
+    <h2>Переход на <a href="/">главную</a></h2>
+{% endblock content %}
