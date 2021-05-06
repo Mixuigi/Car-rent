@@ -15,7 +15,7 @@ class RentAdmin(admin.ModelAdmin):
     list_filter = ('car_brand', 'car_model', 'time_and_price')
 
 class TimPrAdmin(admin.ModelAdmin):
-    list_display = ('time_and_price', 'price')
+    list_display = ('time_and_price', )
 
 admin.site.register(Person, UserAdmin)
 admin.site.register(Car, CarAdmin)

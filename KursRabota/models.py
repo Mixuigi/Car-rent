@@ -25,21 +25,17 @@ class Car(models.Model):
     def __str__(self):
         return self.number_auto
 
-    # def get_absolute_url(self):
-    #     return reverse('KursRabota:rent_car_number', args=[self.number_auto])
-
-
 class Time_and_Price(models.Model):
-    time_and_price = models.CharField(max_length=10)
-    price = models.CharField(max_length=20)
+    time_and_price = models.CharField(max_length=20)
 
     def __str__(self):
         return self.time_and_price
 
-
 class Rent(models.Model):
-    passport = models.CharField(max_length=20, blank=True,  unique=True)
-    car_number = models.CharField(max_length=20, blank=True,  unique=True)
+    passport = models.CharField(max_length=20, blank=True, unique=True)
+    car_number = models.CharField(max_length=20, blank=True, unique=True)
     car_brand = models.CharField(max_length=30)
     car_model = models.CharField(max_length=20)
     time_and_price = models.ForeignKey(Time_and_Price, on_delete=models.CASCADE)
+    start_time = models.DateTimeField(auto_now_add=True)
+    stop_time = models.DateTimeField()

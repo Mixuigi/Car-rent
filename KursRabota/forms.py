@@ -28,9 +28,7 @@ class RentForm(forms.ModelForm):
         model = Rent
         fields = ['time_and_price']
 
-class TimPr(forms.ModelForm):
-    class Meta:
-        model = Time_and_Price
-        fields = ['price']
+
+
 
 

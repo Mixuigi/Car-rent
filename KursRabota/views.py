@@ -6,6 +6,7 @@ from .forms import *
 import collections
 from .models import *
 from django.contrib.auth.decorators import login_required
+from datetime import timedelta, datetime
 
 
 def register(request):
@@ -78,7 +79,6 @@ def Home(request):
 def UserCabinet(request, car):
     user = Person.objects.get(user=request.user)
     car = get_object_or_404(Car, number_auto=car)
-    time_and_price = Time_and_Price.objects.all()
     if request.method == "POST":
         try:
             create_rent(car, user, request.POST)
@@ -89,21 +89,26 @@ def UserCabinet(request, car):
         'form_rent': RentForm(),
         'passport': user.passport,
         'rents': Rent.objects.all(),  # удалить потом
-        'timeandprice': time_and_price,
+        #'timeandprice': time_and_price,
     }
     return render(request, 'Kabinet.html', data)
 
 
 def create_rent(car, user, data):
-    form_rent = RentForm(data)
-    if not form_rent.is_valid():
+    rent = RentForm(data)
+    if not rent.is_valid():
         return HttpResponse('ошибка валидации')
-    form_rent = form_rent.save(commit=False)
-    form_rent.car_model = car.car_model
-    form_rent.car_brand = car.car_brand
-    form_rent.car_number = car.number_auto
-    form_rent.passport = user.passport
-    form_rent.save()
+
+    hours_from_form = int(str(rent.cleaned_data['time_and_price']).split(' = ')[0][0:-1])
+
+    rent = rent.save(commit=False)
+    rent.start_time = datetime.now()
+    rent.stop_time = datetime.now() + timedelta(hours=hours_from_form)
+    rent.car_model = car.car_model
+    rent.car_brand = car.car_brand
+    rent.car_number = car.number_auto
+    rent.passport = user.passport
+    rent.save()
 
 
 def get_not_rented_cars():

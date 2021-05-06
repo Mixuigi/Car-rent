@@ -18,7 +18,10 @@
                         имеет
                         {{ car.car_class }} класс,
                         коробка передач - {{ car.gear_box }} <br>
-            Время аренды вашего авто и стоимость {{ rent.time_and_price.time_and_price }}
+            Время аренды вашего авто и стоимость {{ rent.time_and_price.time_and_price }} <br>
+            Начало поездки {{ rent.start_time }} <br>
+            Конец поездки в {{ rent.stop_time }}
+
 
     <h3/>
 
@@ -37,7 +40,7 @@
 
             {% endfor %}
         {% endif %}
-
+{% if request.user.is_authenticated and request.user.is_staff %}
         <h1>Арендованные авто:</h1>
         {% for rent in rents %}
             {% for car in cars %}
@@ -54,12 +57,8 @@
         {% endfor %}
 
 
-
-
-        {% if request.user.is_authenticated and request.user.is_staff %}
                 <h3>вы можете войти в  <a href="/admin">админ панель </a> </h3>
 
         {% endif %}
     </h3>
 {% endblock content %}
-
