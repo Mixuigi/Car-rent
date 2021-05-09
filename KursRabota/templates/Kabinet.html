@@ -2,29 +2,56 @@
 {% block title %} Личный кабинет {% endblock title %}
 
 {% block content %}
+    {% if is_person_has_rent %}
+        <h1>
 
-    <h2>
-        {{ request.user }} вы выбрали {{ car.car_brand }} {{ car.car_model }}, её уникальный номер {{ car.number_auto }}, авто
-        имеет {{ car.car_class }} класс,
-        коробка передач - {{ car.gear_box }}
-    </h2>
+            Добавление комментария к {{ car.car_brand }} {{ car.car_model }}:
+        </h1>
 
-    <h3>
+        <form method="post">
+            {% csrf_token %}
+            {{ add_comments.as_p }}
+            <button class="btn btn-success" type="submit">Добавить комментарий!</button>
+        </form>
+
+    {% else %}
+
+        <h2>
+            {{ request.user }} вы выбрали {{ car.car_brand }} {{ car.car_model }}, её уникальный
+            номер {{ car.number_auto }},
+            коробка передач - {{ car.gear_box }}
+        </h2>
+
+        <h3>
         <form method="post">
             {% csrf_token %}
             {{ form_rent.as_p }}
-        <button class="btn btn-success" type="submit">Арендовать авто!</button>
+            <button class="btn btn-success" type="submit">Арендовать авто!</button>
         </form>
-            текущий {{ passport}}<br>
-            текущий номер авто {{ car }}<br>
-
+        текущий {{ passport }}<br>
+        текущий номер авто {{ car }}<br>
+        Комментарии: {{ comment }}
         Арендованные:
 
-            {% for rent in rents %}
-             авто - {{ rent.car_number }}<br>
-            {% endfor %}
+        {% for rent in rents %}
+            авто - {{ rent.car_number }}<br>
+        {% endfor %}
+
+    {% endif %}
+</h3>
 
 
-    </h3>
+
+    <h1> Комментарии к автомобилю:<br></h1>
+    <h4>
+        -------------------------------------------------------- <br>
+        {% for comment in comments %}
+            {{ comment.text_comment }} {{ comment.comment_date_published }} <br>
+            -------------------------------------------------------- <br>
+        {% endfor %}
+
+    </h4>
+
+
     <h2>Переход на <a href="/">главную</a></h2>
 {% endblock content %}

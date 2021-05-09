@@ -3,7 +3,6 @@ from django.db import IntegrityError
 from django.shortcuts import render, HttpResponse, redirect, HttpResponseRedirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
 from .forms import *
-import collections
 from .models import *
 from django.contrib.auth.decorators import login_required
 from datetime import timedelta, datetime
@@ -79,17 +78,30 @@ def Home(request):
 def UserCabinet(request, car):
     user = Person.objects.get(user=request.user)
     car = get_object_or_404(Car, number_auto=car)
+    rent = Rent.objects.filter(passport=user.passport).first()
+    comment = Comment.objects.filter(commented_car=car)
+
+    if rent:
+        is_person_has_rent = True
+        #car_in_rent = Car.objects.get(number_auto=rent.car_number)
+    else:
+        is_person_has_rent = False
+        #car_in_rent = False
+
     if request.method == "POST":
         try:
             create_rent(car, user, request.POST)
+            add_comment_for_car(user, car, request.POST)
         except IntegrityError:
             return HttpResponseRedirect('/')
     data = {
+        'is_person_has_rent': is_person_has_rent,
         'car': car,
         'form_rent': RentForm(),
         'passport': user.passport,
+        'comments': comment,
+        'add_comments': CommentForm,
         'rents': Rent.objects.all(),  # удалить потом
-        #'timeandprice': time_and_price,
     }
     return render(request, 'Kabinet.html', data)
 
@@ -120,4 +132,12 @@ def get_not_rented_cars():
     except:
         return []
 
+def add_comment_for_car(user, car, data):
+    add_comment = CommentForm(data)
+    if not add_comment.is_valid():
+        return HttpResponse('ошибка валидации')
+    add_comment = add_comment.save(commit=False)
+    add_comment.commented_car = car  # присваивание комменту slug поста
+    add_comment.user = user  # присваивание комменту юзера
+    add_comment.save()
 

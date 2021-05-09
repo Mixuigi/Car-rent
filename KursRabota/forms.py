@@ -29,6 +29,7 @@ class RentForm(forms.ModelForm):
         fields = ['time_and_price']
 
 
-
-
-
+class CommentForm(forms.ModelForm):
+    class Meta:
+        model = Comment
+        fields = ('text_comment',)

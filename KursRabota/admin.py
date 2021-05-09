@@ -17,7 +17,13 @@ class RentAdmin(admin.ModelAdmin):
 class TimPrAdmin(admin.ModelAdmin):
     list_display = ('time_and_price', )
 
+class CommentAdmin(admin.ModelAdmin):
+    list_display = ('commented_car', 'comment_date_published', 'text_comment')
+    list_filter = ('comment_date_published',)
+
 admin.site.register(Person, UserAdmin)
 admin.site.register(Car, CarAdmin)
 admin.site.register(Time_and_Price, TimPrAdmin)
+admin.site.register(Comment, CommentAdmin)
+
 #admin.site.register(Rent)
