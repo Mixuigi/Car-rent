@@ -11,48 +11,52 @@
 
 
 
-        {% if is_person_has_rent %}
-            <h1>Вы арендовали:</h1>
-
+    {% if is_person_has_rent %}
+        <h1>Вы арендовали:</h1>
+        <h3>
             <a href="{% url 'rent_car_number' car=car.number_auto %}"> Автомобиль {{ car.car_brand }}
-            {{ car.car_model }}, с
-            номером {{ car.number_auto }} </a> <<<< оставьте свой отзыв, <br>
+                {{ car.car_model }}, с
+                номером {{ car.number_auto }} </a> <<<< оставьте свой отзыв, <br>
             коробка передач - {{ car.gear_box }} <br>
             Время аренды вашего авто и стоимость {{ rent.time_and_price.time_and_price }} <br>
+            Местонахождение вашего авто - {{ car.parking }} <br>
             Начало поездки {{ rent.start_time }} <br>
-            Конец поездки в {{ rent.stop_time }}
+            Конец поездки в {{ rent.stop_time }} <br>
+        </h3>
 
 
+    {% else %}
+        <h1>Не арендованные авто:</h1>
+        {% for car in not_rented_cars %}
+            <h4>
+                <a href="{% url 'rent_car_number' car=car.number_auto %}">Автомобиль {{ car.car_brand }} {{ car.car_model }},
+                    с номером {{ car.number_auto }}</a>,
+                коробка передач - {{ car.gear_box }} <br>
+                Местонахождение авто - {{ car.parking }} <br>
 
-        {% else %}
-            <h1>Не арендованные авто:</h1>
-            {% for car in not_rented_cars %}
-                <h4>
-                    <a href="{% url 'rent_car_number' car=car.number_auto %}">Автомобиль {{ car.car_brand }} {{ car.car_model }},
-                        с
-                        номером {{ car.number_auto }}</a>,
-                    коробка передач - {{ car.gear_box }} <br>
-                </h4>
+            </h4>
 
+        {% endfor %}
+    {% endif %}
+    {% if request.user.is_authenticated and request.user.is_staff %}
+        <h1>Арендованные авто:</h1>
+        {% for rent in rents %}
+            {% for car in cars %}
+                {% if rent.car_number == car.number_auto %}
+                    <h4>
+                        Автомобиль {{ car.car_brand }} {{ car.car_model }}, с
+                        номером {{ car.number_auto }},
+                        коробка передач - {{ car.gear_box }} <br>
+                        Местонахождение вашего авто - {{ car.parking }} <br>
+                        машина {{ car.auto_service }}<br>
+                    </h4>
+                {% endif %}
             {% endfor %}
-        {% endif %}
-        {% if request.user.is_authenticated and request.user.is_staff %}
-            <h1>Арендованные авто:</h1>
-            {% for rent in rents %}
-                {% for car in cars %}
-                    {% if rent.car_number == car.number_auto %}
-                        <h4>
-                            Автомобиль {{ car.car_brand }} {{ car.car_model }}, с
-                            номером {{ car.number_auto }},
-                            коробка передач - {{ car.gear_box }} <br>
-                        </h4>
-                    {% endif %}
-                {% endfor %}
-            {% endfor %}
+        {% endfor %}
 
 
-            <h3>вы можете войти в <a href="/admin">админ панель </a></h3>
+        <h3>вы можете войти в <a href="/admin">админ панель </a></h3>
 
-        {% endif %}
+    {% endif %}
 
 {% endblock content %}

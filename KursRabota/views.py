@@ -53,11 +53,11 @@ def Home(request):
     persons = Person.objects.all()
     not_rented_cars = get_not_rented_cars()
     user = Person.objects.get(user=request.user)
-    rent = Rent.objects.filter(passport=user.passport).first()
+    rent = Rent.objects.filter(passport=user.passport,).first()
 
     if rent:
         is_person_has_rent = True
-        car = Car.objects.get(number_auto=rent.car_number)
+        car = Car.objects.get(number_auto=rent.car_number,)
 
     else:
         is_person_has_rent = False
@@ -77,16 +77,14 @@ def Home(request):
 
 def UserCabinet(request, car):
     user = Person.objects.get(user=request.user)
-    car = get_object_or_404(Car, number_auto=car)
+    car = get_object_or_404(Car, number_auto=car, )
     rent = Rent.objects.filter(passport=user.passport).first()
     comment = Comment.objects.filter(commented_car=car)
 
     if rent:
         is_person_has_rent = True
-        #car_in_rent = Car.objects.get(number_auto=rent.car_number)
     else:
         is_person_has_rent = False
-        #car_in_rent = False
 
     if request.method == "POST":
         try:
@@ -101,7 +99,6 @@ def UserCabinet(request, car):
         'passport': user.passport,
         'comments': comment,
         'add_comments': CommentForm,
-        'rents': Rent.objects.all(),  # удалить потом
     }
     return render(request, 'Kabinet.html', data)
 
@@ -119,6 +116,8 @@ def create_rent(car, user, data):
     rent.car_model = car.car_model
     rent.car_brand = car.car_brand
     rent.car_number = car.number_auto
+    rent.car_place = car.parking
+    rent.auto_service = car.auto_service
     rent.passport = user.passport
     rent.save()
 
@@ -127,17 +126,17 @@ def get_not_rented_cars():
     try:
         rents = Rent.objects.all()
         rented_car_numbers = [rent.car_number for rent in rents]
-        not_rented_cars = Car.objects.exclude(number_auto__in=rented_car_numbers)
+        not_rented_cars = Car.objects.exclude(number_auto__in=rented_car_numbers,)
         return not_rented_cars
     except:
         return []
+
 
 def add_comment_for_car(user, car, data):
     add_comment = CommentForm(data)
     if not add_comment.is_valid():
         return HttpResponse('ошибка валидации')
     add_comment = add_comment.save(commit=False)
-    add_comment.commented_car = car  # присваивание комменту slug поста
-    add_comment.user = user  # присваивание комменту юзера
+    add_comment.commented_car = car
+    add_comment.user = user
     add_comment.save()
-

@@ -19,7 +19,9 @@
         <h2>
             {{ request.user }} вы выбрали {{ car.car_brand }} {{ car.car_model }}, её уникальный
             номер {{ car.number_auto }},
-            коробка передач - {{ car.gear_box }}
+            коробка передач - {{ car.gear_box }}.
+            Местонахождение вашего авто - {{ car.parking }} <br>
+
         </h2>
 
         <h3>
@@ -28,14 +30,6 @@
             {{ form_rent.as_p }}
             <button class="btn btn-success" type="submit">Арендовать авто!</button>
         </form>
-        текущий {{ passport }}<br>
-        текущий номер авто {{ car }}<br>
-        Комментарии: {{ comment }}
-        Арендованные:
-
-        {% for rent in rents %}
-            авто - {{ rent.car_number }}<br>
-        {% endfor %}
 
     {% endif %}
 </h3>
